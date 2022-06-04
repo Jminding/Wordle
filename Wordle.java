@@ -10,7 +10,8 @@ import java.util.*;
 
 public class Wordle {
 
-    public String correctWord = WordleDictionary.FIVE_LETTER_WORDS[(int) (Math.random() * WordleDictionary.FIVE_LETTER_WORDS.length)].toUpperCase();
+    public String correctWord = "RELIC";
+//            WordleDictionary.FIVE_LETTER_WORDS[(int) (Math.random() * WordleDictionary.FIVE_LETTER_WORDS.length)].toUpperCase();
 
     public void run() {
         gw = new WordleGWindow();
@@ -66,7 +67,7 @@ public class Wordle {
             }
             else if (correctWord.contains(s.substring(i, i + 1)) && correctWord.charAt(i) != s.charAt(i)) {
                 gw.setSquareColor(gw.getCurrentRow(), i, gw.PRESENT_COLOR);
-                gw.setKeyColor(s.substring(i, i + 1), gw.PRESENT_COLOR);
+                if (!gw.getKeyColor(s.substring(i, i + 1)).equals(gw.CORRECT_COLOR)) gw.setKeyColor(s.substring(i, i + 1), gw.PRESENT_COLOR);
             }
             else {
                 gw.setSquareColor(gw.getCurrentRow(), i, gw.MISSING_COLOR);
