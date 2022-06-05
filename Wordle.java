@@ -42,22 +42,26 @@ public class Wordle {
         guessCharCount.clear();
         currChar.clear();
         correctCharCount.clear();
-        for (int i = 0; i < 5; i++) {
-            if (!guessCharCount.containsKey(s.substring(i, i + 1))) guessCharCount.put(s.substring(i, i + 1), 1);
-            else guessCharCount.put(s.substring(i, i + 1), guessCharCount.get(s.substring(i, i + 1)) + 1);
-            if (s.charAt(i) == correctWord.charAt(i)) {
-                if (!correctCharCount.containsKey(s.substring(i, i + 1))) correctCharCount.put(s.substring(i, i + 1), 1);
-                else correctCharCount.put(s.substring(i, i + 1), correctCharCount.get(s.substring(i, i + 1)) + 1);
-            }
-        }
         if (pos >= 0) {
             numTries++;
+            for (int i = 0; i < 5; i++) {
+                if (!guessCharCount.containsKey(s.substring(i, i + 1))) guessCharCount.put(s.substring(i, i + 1), 1);
+                else guessCharCount.put(s.substring(i, i + 1), guessCharCount.get(s.substring(i, i + 1)) + 1);
+                if (s.charAt(i) == correctWord.charAt(i)) {
+                    if (!correctCharCount.containsKey(s.substring(i, i + 1))) correctCharCount.put(s.substring(i, i + 1), 1);
+                    else correctCharCount.put(s.substring(i, i + 1), correctCharCount.get(s.substring(i, i + 1)) + 1);
+                }
+            }
             // gw.showMessage("Valid word!");
             if (!s.equals(correctWord)) {
                 if (numTries == 6) {
                     colorSquares(s);
                     gw.showMessage(correctWord);
-                    gw.disableComponents();
+                    try { // Set the current row to outside the bounds so no more inputs can be made
+                        gw.setCurrentRow(6);
+                    } catch (Exception e) { // And don't make it throw an error
+
+                    }
                 } else {
                     colorSquares(s);
                     gw.setCurrentRow(gw.getCurrentRow() + 1);
@@ -69,7 +73,11 @@ public class Wordle {
                 }
                 if (numTries <= 2) gw.showMessage("Genius");
                 else gw.showMessage("Impressive");
-                gw.disableComponents();
+                try { // Set the current row to outside the bounds so no more inputs can be made
+                    gw.setCurrentRow(6);
+                } catch (Exception e) { // And don't make it throw an error
+
+                }
             }
             
         } else {
@@ -113,5 +121,5 @@ public class Wordle {
 /* Private instance variables */
 
     private WordleGWindow gw;
-    private int numTries = 0;
+    protected static int numTries = 0;
 }

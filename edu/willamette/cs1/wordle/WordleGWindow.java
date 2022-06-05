@@ -49,7 +49,6 @@ public class WordleGWindow {
  */
     protected JFrame frame = new JFrame("Wordle");
     public WordleGWindow() {
-        
         frame.setBackground(Color.WHITE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
@@ -57,12 +56,6 @@ public class WordleGWindow {
         frame.add(canvas, BorderLayout.CENTER);
         frame.pack();
         frame.setVisible(true);
-    }
-
-    public void disableComponents() {
-        for (Component component : frame.getComponents()) {
-            component.setEnabled(false);
-        }
     }
 
 /**
@@ -296,7 +289,7 @@ class WordleCanvas extends JComponent implements KeyListener, MouseListener {
 /**
  * Gets the current row number.
  *
- * @param row The row number
+ * @return row: The row number
  */
 
     public int getCurrentRow() {
@@ -455,29 +448,31 @@ class WordleCanvas extends JComponent implements KeyListener, MouseListener {
  */
 
     private void keyAction(char letter) {
-        letter = Character.toUpperCase(letter);
-        if (letter == DELETE) {
-            showMessage("");
-            if (row < N_ROWS && col > 0) {
-                col--;
-                grid[row][col].setLetter(" ");
-                repaint();
-            }
-        } else if (letter == ENTER) {
-            showMessage("");
-            for (WordleEventListener listener : listeners) {
-                String s = "";
-                for (int col = 0; col < N_COLS; col++) {
-                    s += grid[this.row][col].getLetter();
+        if (getCurrentRow() < 6) { // If still in bounds then listen for inputs, otherwise disregard them
+            letter = Character.toUpperCase(letter);
+            if (letter == DELETE) {
+                showMessage("");
+                if (row < N_ROWS && col > 0) {
+                    col--;
+                    grid[row][col].setLetter(" ");
+                    repaint();
                 }
-                listener.eventAction(s);
-            }
-        } else if (Character.isLetter(letter)) {
-            showMessage("");
-            if (row < N_ROWS && col < N_COLS) {
-                grid[row][col].setLetter("" + letter);
-                col++;
-                repaint();
+            } else if (letter == ENTER) {
+                showMessage("");
+                for (WordleEventListener listener : listeners) {
+                    String s = "";
+                    for (int col = 0; col < N_COLS; col++) {
+                        s += grid[this.row][col].getLetter();
+                    }
+                    listener.eventAction(s);
+                }
+            } else if (Character.isLetter(letter)) {
+                showMessage("");
+                if (row < N_ROWS && col < N_COLS) {
+                    grid[row][col].setLetter("" + letter);
+                    col++;
+                    repaint();
+                }
             }
         }
     }
@@ -667,7 +662,7 @@ class WordleCanvas extends JComponent implements KeyListener, MouseListener {
 
 /* Private instance variables */
 
-    private ArrayList<WordleEventListener> listeners;
+    protected ArrayList<WordleEventListener> listeners;
     private HashMap<String,WordleKey> keys;
     private String message;
     private WordleSquare[][] grid;
